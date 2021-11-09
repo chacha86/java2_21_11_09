@@ -1,4 +1,4 @@
-package test;
+package test.day1;
 
 public class 동물 {
 	
