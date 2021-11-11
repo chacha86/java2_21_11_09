@@ -33,8 +33,6 @@ public class Board {
 				String title = sc.nextLine();
 				System.out.print("내용을 입력해주세요 : ");
 				String body = sc.nextLine();
-				
-				
 		
 				titles.add(title);
 				bodies.add(body);
@@ -49,15 +47,7 @@ public class Board {
 				System.out.print("수정할 게시물 번호:");
 				int targetNo = Integer.parseInt(sc.nextLine());
 			
-				int targetIndex = -1;
-				
-				for(int i = 0; i < numbers.size(); i++) {
-					int currentNo = numbers.get(i);
-					if(targetNo == currentNo) {
-						targetIndex = i;
-						break;
-					}
-				}
+				int targetIndex = getIndexOfArticleNo(targetNo);
 				
 				if(targetIndex == -1) {
 					System.out.println("없는 게시물입니다.");
@@ -73,8 +63,36 @@ public class Board {
 					
 					list();
 				}				
+			} else if(cmd.equals("delete")) {
+				System.out.print("삭제할 게시물 번호:");
+				int targetNo = Integer.parseInt(sc.nextLine());
+			
+				int targetIndex = getIndexOfArticleNo(targetNo);
+				
+				if(targetIndex == -1) {
+					System.out.println("없는 게시물입니다.");
+				} else {
+					titles.remove(targetIndex);
+					bodies.remove(targetIndex);
+					numbers.remove(targetIndex);
+					System.out.println("삭제가 완료되었습니다.");
+					
+					list();
+				}		
 			}
 		}	
+	}
+	
+	public int getIndexOfArticleNo(int targetNo) {
+		
+		for(int i = 0; i < numbers.size(); i++) {
+			int currentNo = numbers.get(i);
+			if(targetNo == currentNo) {
+				return i;
+			}
+		}
+		
+		return -1;		
 	}
 	
 	public void list() {
