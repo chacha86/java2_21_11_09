@@ -3,6 +3,8 @@ package board;
 import java.util.ArrayList;
 import java.util.Scanner;
 
+import board.util.MyUtil;
+
 public class Board {
 	
 	ArrayList<Article> articles = new ArrayList<>();	
@@ -36,9 +38,9 @@ public class Board {
 	}
 	
 	private void makeTestData() {
-		articles.add(new Article(1, "안녕하세요", "내용1입니다."));
-		articles.add(new Article(2, "반갑습니다.", "내용2입니다."));
-		articles.add(new Article(3, "안녕안녕", "내용3입니다."));
+		articles.add(new Article(1, "안녕하세요", "내용1입니다.", MyUtil.getCurrentDate("yyyy-MM-dd"), "익명", 0));
+		articles.add(new Article(2, "반갑습니다.", "내용2입니다.", MyUtil.getCurrentDate("yyyy-MM-dd"), "익명", 0));
+		articles.add(new Article(3, "안녕안녕", "내용3입니다.", MyUtil.getCurrentDate("yyyy-MM-dd"), "익명", 0));
 	}
 	
 	private void searchArticles() {
@@ -89,7 +91,7 @@ public class Board {
 			System.out.print("새내용 : ");
 			String body = sc.nextLine();
 			
-			Article article = new Article(targetNo, title, body);
+			Article article = new Article(targetNo, title, body, "2021.11.11", "익명", 0 );
 			articles.set(targetIndex, article);
 			
 			System.out.println("수정이 완료되었습니다.");
@@ -103,8 +105,9 @@ public class Board {
 		String title = sc.nextLine();
 		System.out.print("내용을 입력해주세요 : ");
 		String body = sc.nextLine();
-
-		Article article = new Article(no, title, body);			
+		
+		String currentDate = MyUtil.getCurrentDate("yyyy-MM-dd");		
+		Article article = new Article(no, title, body, currentDate, "익명", 0);			
 		articles.add(article);
 		
 		System.out.println("게시물이 저장되었습니다.");
@@ -138,6 +141,9 @@ public class Board {
 			
 			System.out.println("번호 : " + article.id);
 			System.out.println("제목 : " + article.title);
+			System.out.println("작성자 : " + article.writer);
+			System.out.println("등록날짜 : " + article.regDate);
+			System.out.println("조회수 : " + article.hit);
 			System.out.println("=========================");					
 		}
 	}
