@@ -7,10 +7,14 @@ public class Board {
 	
 	ArrayList<Article> articles = new ArrayList<>();	
 	Scanner sc = new Scanner(System.in);
-	int no = 1; // 게시물 번호
+	int no = 4; // 게시물 번호
+	
+	public Board() {
+		makeTestData();
+	}
 	
 	public void runBoard() {		
-				
+		
 		while(true) {
 			System.out.print("명령어를 입력해주세요 : ");
 			String cmd = sc.nextLine();
@@ -29,6 +33,12 @@ public class Board {
 				searchArticles();
 			}
 		}	
+	}
+	
+	private void makeTestData() {
+		articles.add(new Article(1, "안녕하세요", "내용1입니다."));
+		articles.add(new Article(2, "반갑습니다.", "내용2입니다."));
+		articles.add(new Article(3, "안녕안녕", "내용3입니다."));
 	}
 	
 	private void searchArticles() {
