@@ -7,7 +7,8 @@ import board.util.MyUtil;
 
 public class Board {
 	
-	ArrayList<Article> articles = new ArrayList<>();	
+	ArrayList<Article> articles = new ArrayList<>();
+	ArrayList<Member> members = new ArrayList<>();	
 	Scanner sc = new Scanner(System.in);
 	int no = 4; // 게시물 번호
 	
@@ -35,10 +36,26 @@ public class Board {
 				searchArticles();
 			} else if(cmd.equals("read")) {
 				read();
+			} else if(cmd.equals("signup")) {
+				signup();
 			}
 		}	
 	}
 	
+	private void signup() {
+		System.out.print("아이디를 입력해주세요 : ");
+		String loginId = sc.nextLine();
+		System.out.print("비밀번호를 입력해주세요 : ");
+		String loginPw = sc.nextLine();
+		System.out.print("닉네임을 입력해주세요 : ");
+		String nickname = sc.nextLine();
+				
+		Member member = new Member(loginId, loginPw, nickname);			
+		members.add(member);
+		
+		System.out.println("회원가입이 완료되었습니다.");
+	}
+
 	private void read() {
 		System.out.print("상세보기할 게시물 번호 : ");
 		int targetNo = Integer.parseInt(sc.nextLine());
