@@ -113,13 +113,11 @@ public class Board {
 		System.out.print("상세보기할 게시물 번호 : ");
 		int targetNo = Integer.parseInt(sc.nextLine());
 
-		int targetIndex = getIndexOfArticleNo(targetNo);
+		Article article = getArticleByNo(targetNo);
 
-		if (targetIndex == -1) {
+		if (article == null) {
 			System.out.println("없는 게시물입니다.");
 		} else {
-			Article article = articles.get(targetIndex);
-
 			article.hit++; // 조회수 증가
 
 			System.out.println("==== " + article.id + "번 게시물 ====");
@@ -128,7 +126,7 @@ public class Board {
 			System.out.println("-------------------");
 			System.out.println("내용 : " + article.body);
 			System.out.println("-------------------");
-			System.out.println("작성자 : " + article.memberId);
+			System.out.println("작성자 : " + article.nickname);
 			System.out.println("등록날짜: " + article.regDate);
 			System.out.println("조회수 : " + article.hit);
 			System.out.println("===================");
@@ -168,12 +166,12 @@ public class Board {
 		System.out.print("삭제할 게시물 번호:");
 		int targetNo = Integer.parseInt(sc.nextLine());
 
-		int targetIndex = getIndexOfArticleNo(targetNo);
+		Article article = getArticleByNo(targetNo);
 
-		if (targetIndex == -1) {
+		if (article == null) {
 			System.out.println("없는 게시물입니다.");
 		} else {
-			articles.remove(targetIndex);
+			articles.remove(article);
 			System.out.println("삭제가 완료되었습니다.");
 
 			list(articles);
@@ -185,9 +183,9 @@ public class Board {
 		System.out.print("수정할 게시물 번호:");
 		int targetNo = Integer.parseInt(sc.nextLine());
 
-		int targetIndex = getIndexOfArticleNo(targetNo);
+		Article article = getArticleByNo(targetNo);
 
-		if (targetIndex == -1) {
+		if (article == null) {
 			System.out.println("없는 게시물입니다.");
 		} else {
 			System.out.print("새제목 : ");
@@ -195,8 +193,8 @@ public class Board {
 			System.out.print("새내용 : ");
 			String body = sc.nextLine();
 
-			//Article article = new Article(targetNo, title, body, "2021.11.11", "익명", 0);
-			//articles.set(targetIndex, article);
+			article.title = title;
+			article.body = body;
 
 			System.out.println("수정이 완료되었습니다.");
 			list(articles);
@@ -228,25 +226,64 @@ public class Board {
 		System.out.println("search : 게시물 검색");
 	}
 
-	public int getIndexOfArticleNo(int targetNo) {
-
+	// 게시물 데이터를 찾을 때 index가 아닌 게시물 데이터 그 자체를 찾는 것으로 변경
+	// 회원이름을 게시물에 적용시켜 조립된 상태로 얻기 위함.
+	public Article getArticleByNo(int targetNo) {
+		
+		Article targetArticle = null;
+		
+		// 찾고자하는 게시물을 찾고
 		for (int i = 0; i < articles.size(); i++) {
 			Article currentArticle = articles.get(i);
 			if (targetNo == currentArticle.id) {
-				return i;
+				targetArticle = currentArticle;
+				break;
 			}
 		}
+		
+		// 닉네임을 세팅하고 
+		targetArticle = setArticleNickname(targetArticle);
+		
+		// 반환
+		return targetArticle;
+	}
 
-		return -1;
+	// 게시물을 받아 해당 게시물의 작성자 번호에 맞는 작성자 닉네임을 세팅해주는 메서드
+	private Article setArticleNickname(Article article) {
+		
+		// null이 아니면 게시물에 닉네임을 세팅해주고 반환 아니면 null 그대로 반환
+		if(article != null) {
+			Member member = getMemberByMemberNo(article.memberId);
+			article.nickname = member.nickname;			
+		}
+		
+		return article;
+	}
+	
+	// 게시물 찾기와 마찬가지로 역시 회원 정보 그 자체를 찾은 것으로 변경
+	private Member getMemberByMemberNo(int memberId) {
+		
+		Member targetMember = null;
+		
+		for(int i = 0; i < members.size(); i++) {
+			Member currentMember = members.get(i); 
+			if(memberId == currentMember.id) {
+				targetMember = currentMember;
+				break;
+			}
+		}
+		
+		return targetMember;
 	}
 
 	public void list(ArrayList<Article> list) {
 		for (int i = 0; i < list.size(); i++) {
 			Article article = list.get(i);
-
+			article = setArticleNickname(article); // 모든 게시물의 닉네임을 작성자에 맞게 세팅
+			
 			System.out.println("번호 : " + article.id);
 			System.out.println("제목 : " + article.title);
-			System.out.println("작성자 : " + article.memberId);
+			System.out.println("작성자 : " + article.nickname);
 			System.out.println("등록날짜 : " + article.regDate);
 			System.out.println("조회수 : " + article.hit);
 			System.out.println("=========================");
