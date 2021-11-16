@@ -11,7 +11,8 @@ public class Board {
 	ArrayList<Member> members = new ArrayList<>();
 	Scanner sc = new Scanner(System.in);
 	Member loginedMember = null; // 로그인한 유저 정보
-	int no = 4; // 게시물 번호
+	int articleNo = 4; // 게시물 번호
+	int memberNo = 3;
 
 	public Board() {
 		makeTestData();
@@ -30,7 +31,9 @@ public class Board {
 			if (cmd.equals("help")) {
 				printHelp();
 			} else if (cmd.equals("add")) {
-				addArticle();
+				if(isLoginCheck() == true) {					
+					addArticle();
+				}
 			} else if (cmd.equals("list")) {
 				list(articles);
 			} else if (cmd.equals("update")) {
@@ -45,8 +48,28 @@ public class Board {
 				signup();
 			} else if (cmd.equals("login")) {
 				login();
+			} else if (cmd.equals("logout")) {
+				if(isLoginCheck() == true) {					
+					logout();
+				}
 			}
 		}
+	}
+
+	private boolean isLoginCheck() {
+		if(loginedMember == null) {
+			System.out.println("로그인이 필요한 기능입니다.");
+			return false;
+		}
+		
+		return true;
+	}
+	
+	private void logout() {
+		
+		loginedMember = null;
+		System.out.println("로그아웃 되셨습니다.");
+		
 	}
 
 	private void login() {
@@ -79,10 +102,11 @@ public class Board {
 		System.out.print("닉네임을 입력해주세요 : ");
 		String nickname = sc.nextLine();
 
-		Member member = new Member(loginId, loginPw, nickname);
+		Member member = new Member(memberNo, loginId, loginPw, nickname);
 		members.add(member);
 
 		System.out.println("회원가입이 완료되었습니다.");
+		memberNo++;
 	}
 
 	private void read() {
@@ -104,7 +128,7 @@ public class Board {
 			System.out.println("-------------------");
 			System.out.println("내용 : " + article.body);
 			System.out.println("-------------------");
-			System.out.println("작성자 : " + article.writer);
+			System.out.println("작성자 : " + article.memberId);
 			System.out.println("등록날짜: " + article.regDate);
 			System.out.println("조회수 : " + article.hit);
 			System.out.println("===================");
@@ -112,9 +136,15 @@ public class Board {
 	}
 
 	private void makeTestData() {
-		articles.add(new Article(1, "안녕하세요", "내용1입니다.", MyUtil.getCurrentDate("yyyy-MM-dd"), "익명", 0));
-		articles.add(new Article(2, "반갑습니다.", "내용2입니다.", MyUtil.getCurrentDate("yyyy-MM-dd"), "익명", 0));
-		articles.add(new Article(3, "안녕안녕", "내용3입니다.", MyUtil.getCurrentDate("yyyy-MM-dd"), "익명", 0));
+		String currentDate = MyUtil.getCurrentDate("yyyy.MM.dd");
+		articles.add(new Article(1, "안녕하세요", "내용1입니다.", currentDate, 1, 0));
+		articles.add(new Article(2, "반갑습니다.", "내용2입니다.", currentDate, 2, 0));
+		articles.add(new Article(3, "안녕안녕", "내용3입니다.", currentDate, 1, 0));
+		members.add(new Member(1, "hong123", "h1234", "홍길동"));
+		members.add(new Member(2, "lee123", "1234", "이순신"));
+		
+		loginedMember = members.get(0);
+		
 	}
 
 	private void searchArticles() {
@@ -165,8 +195,8 @@ public class Board {
 			System.out.print("새내용 : ");
 			String body = sc.nextLine();
 
-			Article article = new Article(targetNo, title, body, "2021.11.11", "익명", 0);
-			articles.set(targetIndex, article);
+			//Article article = new Article(targetNo, title, body, "2021.11.11", "익명", 0);
+			//articles.set(targetIndex, article);
 
 			System.out.println("수정이 완료되었습니다.");
 			list(articles);
@@ -175,17 +205,18 @@ public class Board {
 	}
 
 	private void addArticle() {
+				
 		System.out.print("제목을 입력해주세요 : ");
 		String title = sc.nextLine();
 		System.out.print("내용을 입력해주세요 : ");
 		String body = sc.nextLine();
 
 		String currentDate = MyUtil.getCurrentDate("yyyy-MM-dd");
-		Article article = new Article(no, title, body, currentDate, "익명", 0);
+		Article article = new Article(articleNo, title, body, currentDate, loginedMember.id, 0);
 		articles.add(article);
 
 		System.out.println("게시물이 저장되었습니다.");
-		no++;
+		articleNo++;
 
 	}
 
@@ -215,7 +246,7 @@ public class Board {
 
 			System.out.println("번호 : " + article.id);
 			System.out.println("제목 : " + article.title);
-			System.out.println("작성자 : " + article.writer);
+			System.out.println("작성자 : " + article.memberId);
 			System.out.println("등록날짜 : " + article.regDate);
 			System.out.println("조회수 : " + article.hit);
 			System.out.println("=========================");
