@@ -10,7 +10,7 @@ public class Board {
 	ArrayList<Article> articles = new ArrayList<>();
 	ArrayList<Member> members = new ArrayList<>();
 	ArrayList<Reply> replies = new ArrayList<>();
-	
+
 	Scanner sc = new Scanner(System.in);
 	String dateFormat = "yyyy.MM.dd";
 	Member loginedMember = null; // 로그인한 유저 정보
@@ -35,7 +35,7 @@ public class Board {
 			if (cmd.equals("help")) {
 				printHelp();
 			} else if (cmd.equals("add")) {
-				if(isLoginCheck() == true) {					
+				if (isLoginCheck() == true) {
 					addArticle();
 				}
 			} else if (cmd.equals("list")) {
@@ -53,7 +53,7 @@ public class Board {
 			} else if (cmd.equals("login")) {
 				login();
 			} else if (cmd.equals("logout")) {
-				if(isLoginCheck() == true) {					
+				if (isLoginCheck() == true) {
 					logout();
 				}
 			}
@@ -61,19 +61,19 @@ public class Board {
 	}
 
 	private boolean isLoginCheck() {
-		if(loginedMember == null) {
+		if (loginedMember == null) {
 			System.out.println("로그인이 필요한 기능입니다.");
 			return false;
 		}
-		
+
 		return true;
 	}
-	
+
 	private void logout() {
-		
+
 		loginedMember = null;
 		System.out.println("로그아웃 되셨습니다.");
-		
+
 	}
 
 	private void login() {
@@ -124,53 +124,84 @@ public class Board {
 		} else {
 			article.hit++; // 조회수 증가
 
-			System.out.println("==== " + article.id + "번 게시물 ====");
-			System.out.println("번호 : " + article.id);
-			System.out.println("제목 : " + article.title);
-			System.out.println("-------------------");
-			System.out.println("내용 : " + article.body);
-			System.out.println("-------------------");
-			System.out.println("작성자 : " + article.nickname);
-			System.out.println("등록날짜: " + article.regDate);
-			System.out.println("조회수 : " + article.hit);
-			System.out.println("===================");
-				
-			readProcess();
-			
+			printArticle(article);
+			readProcess(article);
+
 		}
 	}
 
-	private void readProcess() {
-	
-		while(true) {
+	private void printArticle(Article article) {
+		System.out.println("==== " + article.id + "번 게시물 ====");
+		System.out.println("번호 : " + article.id);
+		System.out.println("제목 : " + article.title);
+		System.out.println("-------------------");
+		System.out.println("내용 : " + article.body);
+		System.out.println("-------------------");
+		System.out.println("작성자 : " + article.nickname);
+		System.out.println("등록날짜: " + article.regDate);
+		System.out.println("조회수 : " + article.hit);
+		System.out.println("====================");
+		System.out.println("======== 댓글 =======");
+		for (int i = 0; i < replies.size(); i++) {
+			Reply currentReply = replies.get(i);
+
+			if(currentReply.parentId == article.id) {				
+				currentReply = setReplyNickname(currentReply);
+				
+				System.out.println("내용 : " + currentReply.body);
+				System.out.println("작성자 : " + currentReply.nickname);
+				System.out.println("작성일 : " + currentReply.regDate);
+				System.out.println("====================");
+			}
+			
+		}
+
+	}
+
+	private Reply setReplyNickname(Reply reply) {
+
+		// null이 아니면 게시물에 닉네임을 세팅해주고 반환 아니면 null 그대로 반환
+		if ( reply != null) {
+			Member member = getMemberByMemberNo(reply.memberId);
+			reply.nickname = member.nickname;
+		}
+
+		return reply;
+	}
+
+	private void readProcess(Article article) {
+
+		while (true) {
 			System.out.print("상세보기 기능을 선택해주세요(1. 댓글 등록, 2. 좋아요, 3. 수정, 4. 삭제, 5. 목록으로) :");
 			int readCmd = Integer.parseInt(sc.nextLine());
-			
-			if(readCmd == 1) {
-				reply();
-			} else if(readCmd == 2) {
+
+			if (readCmd == 1) {
+				reply(article);
+			} else if (readCmd == 2) {
 				System.out.println("좋아요 기능");
-			} else if(readCmd == 5) {
+			} else if (readCmd == 5) {
 				System.out.println("목록으로 돌아갑니다.");
 				break;
-			}			
+			}
 		}
-		
+
 	}
 
-	private void reply() {
+	private void reply(Article article) {
 		System.out.print("댓글 내용을 입력해주세요 :");
-		
+
 		String rbody = sc.nextLine();
 		int memberId = loginedMember.id;
 		String regDate = MyUtil.getCurrentDate(dateFormat);
-		
-		Reply reply = new Reply(replyNo, rbody, memberId, regDate);
+
+		Reply reply = new Reply(replyNo, article.id, rbody, memberId, regDate);
 		replies.add(reply);
-		
+
 		System.out.println("댓글이 등록되었습니다.");
-		
-		
+
+		// 상세보기 다시 보여주기.
+		printArticle(article);
+
 	}
 
 	private void makeTestData() {
@@ -180,9 +211,9 @@ public class Board {
 		articles.add(new Article(3, "안녕안녕", "내용3입니다.", currentDate, 1, 0));
 		members.add(new Member(1, "hong123", "h1234", "홍길동"));
 		members.add(new Member(2, "lee123", "1234", "이순신"));
-		
+
 		loginedMember = members.get(0);
-		
+
 	}
 
 	private void searchArticles() {
@@ -243,7 +274,7 @@ public class Board {
 	}
 
 	private void addArticle() {
-				
+
 		System.out.print("제목을 입력해주세요 : ");
 		String title = sc.nextLine();
 		System.out.print("내용을 입력해주세요 : ");
@@ -269,9 +300,9 @@ public class Board {
 	// 게시물 데이터를 찾을 때 index가 아닌 게시물 데이터 그 자체를 찾는 것으로 변경
 	// 회원이름을 게시물에 적용시켜 조립된 상태로 얻기 위함.
 	public Article getArticleByNo(int targetNo) {
-		
+
 		Article targetArticle = null;
-		
+
 		// 찾고자하는 게시물을 찾고
 		for (int i = 0; i < articles.size(); i++) {
 			Article currentArticle = articles.get(i);
@@ -280,39 +311,39 @@ public class Board {
 				break;
 			}
 		}
-		
-		// 닉네임을 세팅하고 
+
+		// 닉네임을 세팅하고
 		targetArticle = setArticleNickname(targetArticle);
-		
+
 		// 반환
 		return targetArticle;
 	}
 
 	// 게시물을 받아 해당 게시물의 작성자 번호에 맞는 작성자 닉네임을 세팅해주는 메서드
 	private Article setArticleNickname(Article article) {
-		
+
 		// null이 아니면 게시물에 닉네임을 세팅해주고 반환 아니면 null 그대로 반환
-		if(article != null) {
+		if (article != null) {
 			Member member = getMemberByMemberNo(article.memberId);
-			article.nickname = member.nickname;			
+			article.nickname = member.nickname;
 		}
-		
+
 		return article;
 	}
-	
+
 	// 게시물 찾기와 마찬가지로 역시 회원 정보 그 자체를 찾은 것으로 변경
 	private Member getMemberByMemberNo(int memberId) {
-		
+
 		Member targetMember = null;
-		
-		for(int i = 0; i < members.size(); i++) {
-			Member currentMember = members.get(i); 
-			if(memberId == currentMember.id) {
+
+		for (int i = 0; i < members.size(); i++) {
+			Member currentMember = members.get(i);
+			if (memberId == currentMember.id) {
 				targetMember = currentMember;
 				break;
 			}
 		}
-		
+
 		return targetMember;
 	}
 
@@ -320,7 +351,7 @@ public class Board {
 		for (int i = 0; i < list.size(); i++) {
 			Article article = list.get(i);
 			article = setArticleNickname(article); // 모든 게시물의 닉네임을 작성자에 맞게 세팅
-			
+
 			System.out.println("번호 : " + article.id);
 			System.out.println("제목 : " + article.title);
 			System.out.println("작성자 : " + article.nickname);
