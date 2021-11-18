@@ -1,13 +1,8 @@
 package board;
 
-public class Article {
+public class Article extends BaseInfo {
 
-	int id;
 	String title;
-	String body;
-	String regDate;
-	int memberId; // 게시물을 작성한 회원을 구별하기 위한 용도
-	String nickname; // 출력시 회원의 닉네임을 얻어와 저장하기 위한 용도
 	int hit;
 	//회원정보
 	

@@ -145,29 +145,32 @@ public class Board {
 		for (int i = 0; i < replies.size(); i++) {
 			Reply currentReply = replies.get(i);
 
-			if(currentReply.parentId == article.id) {				
-				currentReply = setReplyNickname(currentReply);
-				
+			BaseInfo info = currentReply;
+			
+			if (currentReply.parentId == article.id) {
+
+				currentReply = (Reply)setNickname(currentReply);
+
 				System.out.println("내용 : " + currentReply.body);
 				System.out.println("작성자 : " + currentReply.nickname);
 				System.out.println("작성일 : " + currentReply.regDate);
 				System.out.println("====================");
 			}
-			
+
 		}
 
 	}
 
-	private Reply setReplyNickname(Reply reply) {
-
-		// null이 아니면 게시물에 닉네임을 세팅해주고 반환 아니면 null 그대로 반환
-		if ( reply != null) {
-			Member member = getMemberByMemberNo(reply.memberId);
-			reply.nickname = member.nickname;
-		}
-
-		return reply;
-	}
+//	private Reply setReplyNickname(Reply reply) {
+//
+//		// null이 아니면 게시물에 닉네임을 세팅해주고 반환 아니면 null 그대로 반환
+//		if ( reply != null) {
+//			Member member = getMemberByMemberNo(reply.memberId);
+//			reply.nickname = member.nickname;
+//		}
+//
+//		return reply;
+//	}
 
 	private void readProcess(Article article) {
 
@@ -313,23 +316,35 @@ public class Board {
 		}
 
 		// 닉네임을 세팅하고
-		targetArticle = setArticleNickname(targetArticle);
+		targetArticle = (Article)setNickname(targetArticle);
 
 		// 반환
 		return targetArticle;
 	}
 
 	// 게시물을 받아 해당 게시물의 작성자 번호에 맞는 작성자 닉네임을 세팅해주는 메서드
-	private Article setArticleNickname(Article article) {
+	private BaseInfo setNickname(BaseInfo info) {
 
 		// null이 아니면 게시물에 닉네임을 세팅해주고 반환 아니면 null 그대로 반환
-		if (article != null) {
-			Member member = getMemberByMemberNo(article.memberId);
-			article.nickname = member.nickname;
+		if (info != null) {
+			Member member = getMemberByMemberNo(info.memberId);
+			info.nickname = member.nickname;
 		}
 
-		return article;
+		return info;
 	}
+
+	// 게시물을 받아 해당 게시물의 작성자 번호에 맞는 작성자 닉네임을 세팅해주는 메서드
+//	private Article setArticleNickname(Article article) {
+//
+//		// null이 아니면 게시물에 닉네임을 세팅해주고 반환 아니면 null 그대로 반환
+//		if (article != null) {
+//			Member member = getMemberByMemberNo(article.memberId);
+//			article.nickname = member.nickname;
+//		}
+//
+//		return article;
+//	}
 
 	// 게시물 찾기와 마찬가지로 역시 회원 정보 그 자체를 찾은 것으로 변경
 	private Member getMemberByMemberNo(int memberId) {
@@ -350,7 +365,7 @@ public class Board {
 	public void list(ArrayList<Article> list) {
 		for (int i = 0; i < list.size(); i++) {
 			Article article = list.get(i);
-			article = setArticleNickname(article); // 모든 게시물의 닉네임을 작성자에 맞게 세팅
+			article = (Article)setNickname(article); // 모든 게시물의 닉네임을 작성자에 맞게 세팅
 
 			System.out.println("번호 : " + article.id);
 			System.out.println("제목 : " + article.title);
