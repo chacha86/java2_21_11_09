@@ -9,10 +9,14 @@ public class Board {
 
 	ArrayList<Article> articles = new ArrayList<>();
 	ArrayList<Member> members = new ArrayList<>();
+	ArrayList<Reply> replies = new ArrayList<>();
+	
 	Scanner sc = new Scanner(System.in);
+	String dateFormat = "yyyy.MM.dd";
 	Member loginedMember = null; // 로그인한 유저 정보
 	int articleNo = 4; // 게시물 번호
 	int memberNo = 3;
+	int replyNo = 1;
 
 	public Board() {
 		makeTestData();
@@ -143,7 +147,7 @@ public class Board {
 			int readCmd = Integer.parseInt(sc.nextLine());
 			
 			if(readCmd == 1) {
-				System.out.println("댓글 기능");
+				reply();
 			} else if(readCmd == 2) {
 				System.out.println("좋아요 기능");
 			} else if(readCmd == 5) {
@@ -154,8 +158,23 @@ public class Board {
 		
 	}
 
+	private void reply() {
+		System.out.print("댓글 내용을 입력해주세요 :");
+		
+		String rbody = sc.nextLine();
+		int memberId = loginedMember.id;
+		String regDate = MyUtil.getCurrentDate(dateFormat);
+		
+		Reply reply = new Reply(replyNo, rbody, memberId, regDate);
+		replies.add(reply);
+		
+		System.out.println("댓글이 등록되었습니다.");
+		
+		
+	}
+
 	private void makeTestData() {
-		String currentDate = MyUtil.getCurrentDate("yyyy.MM.dd");
+		String currentDate = MyUtil.getCurrentDate(dateFormat);
 		articles.add(new Article(1, "안녕하세요", "내용1입니다.", currentDate, 1, 0));
 		articles.add(new Article(2, "반갑습니다.", "내용2입니다.", currentDate, 2, 0));
 		articles.add(new Article(3, "안녕안녕", "내용3입니다.", currentDate, 1, 0));
@@ -230,7 +249,7 @@ public class Board {
 		System.out.print("내용을 입력해주세요 : ");
 		String body = sc.nextLine();
 
-		String currentDate = MyUtil.getCurrentDate("yyyy-MM-dd");
+		String currentDate = MyUtil.getCurrentDate(dateFormat);
 		Article article = new Article(articleNo, title, body, currentDate, loginedMember.id, 0);
 		articles.add(article);
 
