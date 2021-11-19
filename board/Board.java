@@ -87,6 +87,15 @@ public class Board {
 		for (int i = 0; i < members.size(); i++) {
 			Member member = members.get(i);
 			if (member.loginId.equals(loginId) && member.loginPw.equals(loginPw)) {
+				
+				// 우수회원 일반회원 구별
+				if(member instanceof GeneralMember) {
+					System.out.println("안녕하세요 일반회원 " + member.nickname + "님 반갑습니다");
+				} else if(member instanceof SpecialMember) {
+					SpecialMember specialMember = (SpecialMember)member;
+					System.out.println("안녕하세요 우수회원" + specialMember.nickname + "님 사랑합니다. 회원님의 잔여 포인트는 " + specialMember.point);
+				}
+				
 				System.out.println(member.nickname + "님 환영합니다.!");
 				loginedMember = member;
 				isExistLoginId = true;
@@ -99,6 +108,10 @@ public class Board {
 	}
 
 	private void signup() {
+		
+		System.out.print("1. 일반회원, 2. 우수회원 :");
+		int memberFlag = Integer.parseInt(sc.nextLine());
+		
 		System.out.print("아이디를 입력해주세요 : ");
 		String loginId = sc.nextLine();
 		System.out.print("비밀번호를 입력해주세요 : ");
@@ -106,7 +119,13 @@ public class Board {
 		System.out.print("닉네임을 입력해주세요 : ");
 		String nickname = sc.nextLine();
 
-		Member member = new Member(memberNo, loginId, loginPw, nickname);
+		Member member = null;
+		
+		if(memberFlag == 2) {
+			member = new SpecialMember(memberNo, loginId, loginPw, nickname, 0);
+		} else {
+			member = new GeneralMember(memberNo, loginId, loginPw, nickname);
+		}
 		members.add(member);
 
 		System.out.println("회원가입이 완료되었습니다.");
@@ -156,9 +175,7 @@ public class Board {
 				System.out.println("작성일 : " + currentReplyArticle.regDate);
 				System.out.println("====================");
 			}
-
 		}
-
 	}
 
 //	private ReplyArticle setReplyArticleNickname(ReplyArticle ReplyArticle) {
@@ -212,8 +229,8 @@ public class Board {
 		boardArticles.add(new BoardArticle(1, "안녕하세요", "내용1입니다.", currentDate, 1, 0));
 		boardArticles.add(new BoardArticle(2, "반갑습니다.", "내용2입니다.", currentDate, 2, 0));
 		boardArticles.add(new BoardArticle(3, "안녕안녕", "내용3입니다.", currentDate, 1, 0));
-		members.add(new Member(1, "hong123", "h1234", "홍길동"));
-		members.add(new Member(2, "lee123", "1234", "이순신"));
+		members.add(new GeneralMember(1, "hong123", "h1234", "홍길동"));
+		members.add(new GeneralMember(2, "lee123", "1234", "이순신"));
 
 		loginedMember = members.get(0);
 
