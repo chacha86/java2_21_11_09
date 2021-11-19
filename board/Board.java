@@ -89,12 +89,14 @@ public class Board {
 			if (member.loginId.equals(loginId) && member.loginPw.equals(loginPw)) {
 				
 				// 우수회원 일반회원 구별
-				if(member instanceof GeneralMember) {
-					System.out.println("안녕하세요 일반회원 " + member.nickname + "님 반갑습니다");
-				} else if(member instanceof SpecialMember) {
-					SpecialMember specialMember = (SpecialMember)member;
-					System.out.println("안녕하세요 우수회원" + specialMember.nickname + "님 사랑합니다. 회원님의 잔여 포인트는 " + specialMember.point);
-				}
+//				if(member instanceof GeneralMember) {
+//					System.out.println("안녕하세요 일반회원 " + member.nickname + "님 반갑습니다");
+//				} else if(member instanceof SpecialMember) {
+//					SpecialMember specialMember = (SpecialMember)member;
+//					System.out.println("안녕하세요 우수회원" + specialMember.nickname + "님 사랑합니다. 회원님의 잔여 포인트는 " + specialMember.point);
+//				}
+				
+				member.greeting();
 				
 				System.out.println(member.nickname + "님 환영합니다.!");
 				loginedMember = member;
@@ -230,7 +232,7 @@ public class Board {
 		boardArticles.add(new BoardArticle(2, "반갑습니다.", "내용2입니다.", currentDate, 2, 0));
 		boardArticles.add(new BoardArticle(3, "안녕안녕", "내용3입니다.", currentDate, 1, 0));
 		members.add(new GeneralMember(1, "hong123", "h1234", "홍길동"));
-		members.add(new GeneralMember(2, "lee123", "1234", "이순신"));
+		members.add(new SpecialMember(2, "lee123", "1234", "이순신", 0));
 
 		loginedMember = members.get(0);
 
