@@ -1,10 +1,10 @@
 package board;
 
-public class Reply extends BaseInfo {
+public class ReplyArticle extends BaseArticle {
 
 	int parentId; // 부모글 번호
 	
-	public Reply(int id, int parentId, String body, int memberId, String regDate) {
+	public ReplyArticle(int id, int parentId, String body, int memberId, String regDate) {
 		super();
 		this.id = id;
 		this.parentId = parentId;

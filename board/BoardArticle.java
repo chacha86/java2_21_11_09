@@ -1,12 +1,12 @@
 package board;
 
-public class Article extends BaseInfo {
+public class BoardArticle extends BaseArticle {
 
 	String title;
 	int hit;
 	//회원정보
 	
-	public Article(int id, String title, String body, String regDate, int memberId, int hit) {
+	public BoardArticle(int id, String title, String body, String regDate, int memberId, int hit) {
 		super();
 		this.id = id;
 		this.title = title;

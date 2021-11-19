@@ -1,6 +1,6 @@
 package board;
 
-public class BaseInfo {
+public class BaseArticle {
 	int id;
 	String body;
 	String regDate;
