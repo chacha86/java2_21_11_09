@@ -10,7 +10,8 @@ public class Board {
 	ArrayList<BoardArticle> boardArticles = new ArrayList<>();
 	ArrayList<Member> members = new ArrayList<>();
 	ArrayList<ReplyArticle> replies = new ArrayList<>();
-
+	ArrayList<Like> likes = new ArrayList<>();
+	
 	Scanner sc = new Scanner(System.in);
 	String dateFormat = "yyyy.MM.dd";
 	Member loginedMember = null; // 로그인한 유저 정보
@@ -56,7 +57,7 @@ public class Board {
 				if (isLoginCheck() == true) {
 					logout();
 				}
-			}
+			} 
 		}
 	}
 
@@ -138,15 +139,15 @@ public class Board {
 		System.out.print("상세보기할 게시물 번호 : ");
 		int targetNo = Integer.parseInt(sc.nextLine());
 
-		BoardArticle BoardArticle = getBoardArticleByNo(targetNo);
+		BoardArticle boardArticle = getBoardArticleByNo(targetNo);
 
-		if (BoardArticle == null) {
+		if (boardArticle == null) {
 			System.out.println("없는 게시물입니다.");
 		} else {
-			BoardArticle.hit++; // 조회수 증가
+			boardArticle.hit++; // 조회수 증가
 
-			printBoardArticle(BoardArticle);
-			readProcess(BoardArticle);
+			printBoardArticle(boardArticle);
+			readProcess(boardArticle);
 
 		}
 	}
@@ -165,8 +166,6 @@ public class Board {
 		System.out.println("======== 댓글 =======");
 		for (int i = 0; i < replies.size(); i++) {
 			ReplyArticle currentReplyArticle = replies.get(i);
-
-			BaseArticle info = currentReplyArticle;
 			
 			if (currentReplyArticle.parentId == BoardArticle.id) {
 
@@ -180,27 +179,25 @@ public class Board {
 		}
 	}
 
-//	private ReplyArticle setReplyArticleNickname(ReplyArticle ReplyArticle) {
-//
-//		// null이 아니면 게시물에 닉네임을 세팅해주고 반환 아니면 null 그대로 반환
-//		if ( ReplyArticle != null) {
-//			Member member = getMemberByMemberNo(ReplyArticle.memberId);
-//			ReplyArticle.nickname = member.nickname;
-//		}
-//
-//		return ReplyArticle;
-//	}
-
-	private void readProcess(BoardArticle BoardArticle) {
+	private void readProcess(BoardArticle boardArticle) {
 
 		while (true) {
 			System.out.print("상세보기 기능을 선택해주세요(1. 댓글 등록, 2. 좋아요, 3. 수정, 4. 삭제, 5. 목록으로) :");
 			int readCmd = Integer.parseInt(sc.nextLine());
 
 			if (readCmd == 1) {
-				ReplyArticle(BoardArticle);
+				ReplyArticle(boardArticle);
 			} else if (readCmd == 2) {
-				System.out.println("좋아요 기능");
+				
+				// 1. 어떤 게시물? 게시물 번호
+				// 2. 누가 체크했나? 회원 번호
+				// 3. 언제 작성됐는가? 등록날짜
+				
+				Like like = new Like(boardArticle.id, loginedMember.id, MyUtil.getCurrentDate(dateFormat));
+				likes.add(like);
+				System.out.println("해당 게시물을 좋아합니다.");
+				
+				
 			} else if (readCmd == 5) {
 				System.out.println("목록으로 돌아갑니다.");
 				break;
