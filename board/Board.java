@@ -192,10 +192,17 @@ public class Board {
 				// 1. 어떤 게시물? 게시물 번호
 				// 2. 누가 체크했나? 회원 번호
 				// 3. 언제 작성됐는가? 등록날짜
+		
+				Like like = getLikeByArticleIdAndMemberId(boardArticle.id, loginedMember.id);
 				
-				Like like = new Like(boardArticle.id, loginedMember.id, MyUtil.getCurrentDate(dateFormat));
-				likes.add(like);
-				System.out.println("해당 게시물을 좋아합니다.");
+				if(like == null) {
+					like = new Like(boardArticle.id, loginedMember.id, MyUtil.getCurrentDate(dateFormat));
+					likes.add(like);
+					System.out.println("해당 게시물을 좋아합니다.");					
+				} else {				
+					likes.remove(like);
+					System.out.println("해당 게시물의 좋아요를 해제합니다.");
+				}
 				
 				
 			} else if (readCmd == 5) {
@@ -204,6 +211,17 @@ public class Board {
 			}
 		}
 
+	}
+
+	private Like getLikeByArticleIdAndMemberId(int articleId, int memberId) {
+		for(int i = 0; i < likes.size(); i++) {
+			Like like = likes.get(i);
+			if(like.articleId == articleId && like.memberId == memberId) {
+				return like;
+			}
+		}
+		
+		return null;
 	}
 
 	private void ReplyArticle(BoardArticle BoardArticle) {
