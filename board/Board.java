@@ -162,6 +162,12 @@ public class Board {
 		System.out.println("작성자 : " + BoardArticle.nickname);
 		System.out.println("등록날짜: " + BoardArticle.regDate);
 		System.out.println("조회수 : " + BoardArticle.hit);
+		Like like = getLikeByArticleIdAndMemberId(BoardArticle.id, loginedMember.id);
+		if(like == null) {			
+			System.out.println("좋아요 : ♡ " + getLikeCountByArticleId(BoardArticle.id));
+		} else {			
+			System.out.println("좋아요 : ♥ " + getLikeCountByArticleId(BoardArticle.id));
+		}
 		System.out.println("====================");
 		System.out.println("======== 댓글 =======");
 		for (int i = 0; i < replies.size(); i++) {
@@ -179,6 +185,20 @@ public class Board {
 		}
 	}
 
+	public int getLikeCountByArticleId(int articleId) {
+		
+		int count = 0;
+		
+		for(int i = 0; i < likes.size(); i++) {
+			Like like = likes.get(i);
+			if(like.articleId == articleId) {
+				count++;
+			}
+		}
+		
+		return count;
+	}
+	
 	private void readProcess(BoardArticle boardArticle) {
 
 		while (true) {
@@ -204,6 +224,7 @@ public class Board {
 					System.out.println("해당 게시물의 좋아요를 해제합니다.");
 				}
 				
+				printBoardArticle(boardArticle);
 				
 			} else if (readCmd == 5) {
 				System.out.println("목록으로 돌아갑니다.");
