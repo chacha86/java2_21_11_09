@@ -14,24 +14,36 @@ class A {
 	
 	void test() {
 		
-		B b1 = new B();
+		Test b1 = new B();
 		
-		int rst = b1.func1();
+		int rst = b1.func();
 		
 		System.out.println(rst);
 	}
 	
 }
 
-interface test {
-	int func1();
+interface Test {
+	int func();
 }
 
 
 
-class B implements test {
-	public int func1() {
+class B implements Test {
+	public int func() {
+		return 1;
+	}
+}
+
+class C implements Test {
+	public int func()  {
 		return 3;
+	}
+}
+
+class D implements Test {
+	public int func() {
+		return 7;
 	}
 }
 
