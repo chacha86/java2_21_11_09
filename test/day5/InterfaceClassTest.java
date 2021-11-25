@@ -14,7 +14,7 @@ class A {
 	
 	void test() {
 		
-		Test b1 = new B();
+		Test b1 = new C();
 		
 		int rst = b1.func();
 		
