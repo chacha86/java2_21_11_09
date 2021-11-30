@@ -1,6 +1,8 @@
 package board;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.Scanner;
 
 import board.util.MyUtil;
@@ -57,8 +59,20 @@ public class Board {
 				if (isLoginCheck() == true) {
 					logout();
 				}
+			} else if (cmd.equals("sort")) {
+				sort();
 			} 
 		}
+	}
+
+	private void sort() {
+		System.out.println("정렬 대상을 선택해주세요. (1. 번호,  2. 조회수) :");
+		int target = Integer.parseInt(sc.nextLine());
+		System.out.println("정렬 방법을 선택해주세요. (1. 오름차순,  2. 내림차순) :");
+		int type = Integer.parseInt(sc.nextLine());
+		
+		Collections.sort(boardArticles, new ArticleComparator());
+		list(boardArticles);
 	}
 
 	private boolean isLoginCheck() {
@@ -264,9 +278,9 @@ public class Board {
 
 	private void makeTestData() {
 		String currentDate = MyUtil.getCurrentDate(dateFormat);
-		boardArticles.add(new BoardArticle(1, "안녕하세요", "내용1입니다.", currentDate, 1, 0));
-		boardArticles.add(new BoardArticle(2, "반갑습니다.", "내용2입니다.", currentDate, 2, 0));
-		boardArticles.add(new BoardArticle(3, "안녕안녕", "내용3입니다.", currentDate, 1, 0));
+		boardArticles.add(new BoardArticle(1, "안녕하세요", "내용1입니다.", currentDate, 1, 20));
+		boardArticles.add(new BoardArticle(2, "반갑습니다.", "내용2입니다.", currentDate, 2, 100));
+		boardArticles.add(new BoardArticle(3, "안녕안녕", "내용3입니다.", currentDate, 1, 30));
 		members.add(new GeneralMember(1, "hong123", "h1234", "홍길동"));
 		members.add(new SpecialMember(2, "lee123", "1234", "이순신", 0));
 
@@ -431,3 +445,20 @@ public class Board {
 		}
 	}
 }
+
+class ArticleComparator implements Comparator<BoardArticle> {
+
+	@Override
+	public int compare(BoardArticle o1, BoardArticle o2) {
+		
+		if(o1.hit > o2.hit) {
+			return 1;
+		}
+		
+		return -1;
+	}
+	
+}
+
+
+

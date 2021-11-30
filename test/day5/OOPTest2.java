@@ -1,4 +1,4 @@
-package test.day4;
+package test.day5;
 
 public class OOPTest2 {
 

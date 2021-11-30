@@ -1,4 +1,4 @@
-package test.day5;
+package test.day6;
 
 public class InterfaceClassTest {
 
