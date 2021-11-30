@@ -61,7 +61,9 @@ public class Board {
 				}
 			} else if (cmd.equals("sort")) {
 				sort();
-			} 
+			} else if(cmd.equals("page")) {
+				
+			}
 		}
 	}
 
