@@ -69,11 +69,24 @@ public class Board {
 		}
 	}
 
+	private int inputIntData() {
+		int convertedData = 0;
+		while(true) {
+			try {				
+				convertedData = Integer.parseInt(sc.nextLine());
+				break;
+			} catch(NumberFormatException e) {
+				System.out.println("숫자만 입력해야 합니다.");
+			}				
+		}
+		
+		return convertedData;
+	}
+	
 	private void page() {
 		while(true) {			
 			System.out.println("페이징 명령어를 입력해주세요 ((1. 이전,  2. 다음,  3. 선택,  4. 뒤로가기):");
-			int pageCmd = Integer.parseInt(sc.nextLine());
-			
+			int pageCmd = inputIntData();			
 			if(pageCmd == 2) {		
 				
 				if(pagination.currentPageNo >= pagination.getLastPageNo()) {
@@ -92,6 +105,8 @@ public class Board {
 				
 			} else if(pageCmd == 4) {
 				break;
+			} else {
+				System.out.println("알 수 없는 명령입니다. 다시 입력해주세요.");
 			}
 			list(boardArticles);
 		}
@@ -99,9 +114,9 @@ public class Board {
 
 	private void sort() {
 		System.out.println("정렬 대상을 선택해주세요. (1. 번호,  2. 조회수) :");
-		int target = Integer.parseInt(sc.nextLine());
+		int target = inputIntData();
 		System.out.println("정렬 방법을 선택해주세요. (1. 오름차순,  2. 내림차순) :");
-		int type = Integer.parseInt(sc.nextLine());
+		int type = inputIntData();
 		
 		Collections.sort(boardArticles, new ArticleComparator(type, target));
 		list(boardArticles);
@@ -159,7 +174,7 @@ public class Board {
 	private void signup() {
 		
 		System.out.print("1. 일반회원, 2. 우수회원 :");
-		int memberFlag = Integer.parseInt(sc.nextLine());
+		int memberFlag = inputIntData();
 		
 		System.out.print("아이디를 입력해주세요 : ");
 		String loginId = sc.nextLine();
@@ -183,7 +198,7 @@ public class Board {
 
 	private void read() {
 		System.out.print("상세보기할 게시물 번호 : ");
-		int targetNo = Integer.parseInt(sc.nextLine());
+		int targetNo = inputIntData();
 
 		BoardArticle boardArticle = getBoardArticleByNo(targetNo);
 
@@ -249,7 +264,7 @@ public class Board {
 
 		while (true) {
 			System.out.print("상세보기 기능을 선택해주세요(1. 댓글 등록, 2. 좋아요, 3. 수정, 4. 삭제, 5. 목록으로) :");
-			int readCmd = Integer.parseInt(sc.nextLine());
+			int readCmd = inputIntData();
 
 			if (readCmd == 1) {
 				ReplyArticle(boardArticle);
@@ -344,7 +359,7 @@ public class Board {
 
 	private void deleteBoardArticle() {
 		System.out.print("삭제할 게시물 번호:");
-		int targetNo = Integer.parseInt(sc.nextLine());
+		int targetNo = inputIntData();
 
 		BoardArticle BoardArticle = getBoardArticleByNo(targetNo);
 
@@ -361,7 +376,7 @@ public class Board {
 
 	private void updateBoardArticle() {
 		System.out.print("수정할 게시물 번호:");
-		int targetNo = Integer.parseInt(sc.nextLine());
+		int targetNo = inputIntData();
 
 		BoardArticle BoardArticle = getBoardArticleByNo(targetNo);
 
