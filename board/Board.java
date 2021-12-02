@@ -13,7 +13,7 @@ public class Board {
 	ArrayList<Member> members = new ArrayList<>();
 	ArrayList<ReplyArticle> replies = new ArrayList<>();
 	ArrayList<Like> likes = new ArrayList<>();
-	Pagination pagination = new Pagination();
+	Pagination pagination;
 	
 	Scanner sc = new Scanner(System.in);
 	String dateFormat = "yyyy.MM.dd";
@@ -24,6 +24,7 @@ public class Board {
 
 	public Board() {
 		makeTestData();
+		pagination = new Pagination(boardArticles.size());
 	}
 
 	public void runBoard() {
@@ -73,10 +74,22 @@ public class Board {
 			System.out.println("페이징 명령어를 입력해주세요 ((1. 이전,  2. 다음,  3. 선택,  4. 뒤로가기):");
 			int pageCmd = Integer.parseInt(sc.nextLine());
 			
-			if(pageCmd == 2) {			
-				pagination.currentPageNo++;
+			if(pageCmd == 2) {		
+				
+				if(pagination.currentPageNo >= pagination.getLastPageNo()) {
+					System.out.println("마지막 페이지입니다.");
+				} else {					
+					pagination.currentPageNo++;
+				}
+				
 			} else if(pageCmd == 1) {
-				pagination.currentPageNo--;
+				
+				if(pagination.currentPageNo <= 1) {
+					System.out.println("첫번째 페이지입니다.");
+				} else {					
+					pagination.currentPageNo--;
+				}
+				
 			} else if(pageCmd == 4) {
 				break;
 			}
@@ -301,7 +314,7 @@ public class Board {
 		boardArticles.add(new BoardArticle(2, "반갑습니다.", "내용2입니다.", currentDate, 2, 100));
 		boardArticles.add(new BoardArticle(3, "안녕안녕", "내용3입니다.", currentDate, 1, 30));
 		
-		for(int i = 4; i <= 30; i++) {
+		for(int i = 4; i <= 23; i++) {
 			boardArticles.add(new BoardArticle(i, "제목" + i, "내용" + i, currentDate, 1, 30));
 		}
 		
@@ -467,6 +480,9 @@ public class Board {
 			System.out.println("조회수 : " + BoardArticle.hit);
 			System.out.println("=========================");
 		}
+		
+		System.out.println("s : " + pagination.getStartPageNoInBlock());
+		System.out.println("e : " + pagination.getEndPageNoInBlock());
 		
 		// 페이지 숫자
 		for(int i = pagination.getStartPageNoInBlock(); i <= pagination.getEndPageNoInBlock(); i++) {	
