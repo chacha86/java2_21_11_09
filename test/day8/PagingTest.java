@@ -8,7 +8,9 @@ public class PagingTest {
 	public static void main(String[] args) {
 
 		Scanner sc = new Scanner(System.in);
+		
 		ArrayList<String> datas = new ArrayList<String>();
+		
 		int currentPageNo = 1;
 		int pageCountPerBlock = 5;
 		int itemCountPerPage = 3;
@@ -18,15 +20,7 @@ public class PagingTest {
 			datas.add(str);
 		}
 		
-		// 현재페이지 1 , 0, 3
-		// 현재페이지 2 , 3, 6
-		// 현재페이지 3 , 6, 9
-		
-		// 3 * ( 현재페이지 - 1 ); 
-		
-		
 		while(true) {
-			// 현재페이지 번호 / 한 블럭당 페이지 개수
 			int currentBlockNo = (int)Math.ceil((double)currentPageNo / pageCountPerBlock);
 			
 			int startPageNoInBlock = pageCountPerBlock * (currentBlockNo - 1) + 1;

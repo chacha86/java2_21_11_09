@@ -13,6 +13,7 @@ public class Board {
 	ArrayList<Member> members = new ArrayList<>();
 	ArrayList<ReplyArticle> replies = new ArrayList<>();
 	ArrayList<Like> likes = new ArrayList<>();
+	Pagination pagination = new Pagination();
 	
 	Scanner sc = new Scanner(System.in);
 	String dateFormat = "yyyy.MM.dd";
@@ -62,8 +63,24 @@ public class Board {
 			} else if (cmd.equals("sort")) {
 				sort();
 			} else if(cmd.equals("page")) {
-				
+				page();
 			}
+		}
+	}
+
+	private void page() {
+		while(true) {			
+			System.out.println("페이징 명령어를 입력해주세요 ((1. 이전,  2. 다음,  3. 선택,  4. 뒤로가기):");
+			int pageCmd = Integer.parseInt(sc.nextLine());
+			
+			if(pageCmd == 2) {			
+				pagination.currentPageNo++;
+			} else if(pageCmd == 1) {
+				pagination.currentPageNo--;
+			} else if(pageCmd == 4) {
+				break;
+			}
+			list(boardArticles);
 		}
 	}
 
@@ -283,6 +300,11 @@ public class Board {
 		boardArticles.add(new BoardArticle(1, "안녕하세요", "내용1입니다.", currentDate, 1, 20));
 		boardArticles.add(new BoardArticle(2, "반갑습니다.", "내용2입니다.", currentDate, 2, 100));
 		boardArticles.add(new BoardArticle(3, "안녕안녕", "내용3입니다.", currentDate, 1, 30));
+		
+		for(int i = 4; i <= 30; i++) {
+			boardArticles.add(new BoardArticle(i, "제목" + i, "내용" + i, currentDate, 1, 30));
+		}
+		
 		members.add(new GeneralMember(1, "hong123", "h1234", "홍길동"));
 		members.add(new SpecialMember(2, "lee123", "1234", "이순신", 0));
 
@@ -434,7 +456,7 @@ public class Board {
 	}
 
 	public void list(ArrayList<BoardArticle> list) {
-		for (int i = 0; i < list.size(); i++) {
+		for (int i = pagination.getStartIdx(); i < pagination.getEndIdx(); i++) {
 			BoardArticle BoardArticle = list.get(i);
 			BoardArticle = (BoardArticle)setNickname(BoardArticle); // 모든 게시물의 닉네임을 작성자에 맞게 세팅
 
@@ -445,6 +467,16 @@ public class Board {
 			System.out.println("조회수 : " + BoardArticle.hit);
 			System.out.println("=========================");
 		}
+		
+		// 페이지 숫자
+		for(int i = pagination.getStartPageNoInBlock(); i <= pagination.getEndPageNoInBlock(); i++) {	
+			if(i == pagination.currentPageNo) {
+				System.out.print("["+i + "] ");				
+			} else {
+				System.out.print(i + " ");
+			}
+		}
+		System.out.println();
 	}
 }
 
