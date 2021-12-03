@@ -6,6 +6,8 @@ public class BoardArticle extends BaseArticle {
 	public int hit;
 	//회원정보
 	
+	public BoardArticle() {}
+	
 	public BoardArticle(int id, String title, String body, String regDate, int memberId, int hit) {
 		super();
 		this.id = id;

@@ -5,6 +5,7 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.Scanner;
 
+import board.util.FileManager;
 import board.util.MyUtil;
 
 public class Board {
@@ -13,6 +14,7 @@ public class Board {
 	ArrayList<Member> members = new ArrayList<>();
 	ArrayList<ReplyArticle> replies = new ArrayList<>();
 	ArrayList<Like> likes = new ArrayList<>();
+	FileManager fileManager = new FileManager();
 	Pagination pagination;
 	
 	Scanner sc = new Scanner(System.in);
@@ -325,12 +327,17 @@ public class Board {
 
 	private void makeTestData() {
 		String currentDate = MyUtil.getCurrentDate(dateFormat);
-		boardArticles.add(new BoardArticle(1, "안녕하세요", "내용1입니다.", currentDate, 1, 20));
-		boardArticles.add(new BoardArticle(2, "반갑습니다.", "내용2입니다.", currentDate, 2, 100));
-		boardArticles.add(new BoardArticle(3, "안녕안녕", "내용3입니다.", currentDate, 1, 30));
+		BoardArticle article1 = new BoardArticle(1, "안녕하세요", "내용1입니다.", currentDate, 1, 20);
+		BoardArticle article2 = new BoardArticle(2, "반갑습니다.", "내용2입니다.", currentDate, 2, 100);
+		BoardArticle article3 = new BoardArticle(3, "안녕안녕", "내용3입니다.", currentDate, 1, 30);
+		
+		fileManager.saveArticleToFile(article1);
+		fileManager.saveArticleToFile(article2);
+		fileManager.saveArticleToFile(article3);
 		
 		for(int i = 4; i <= 23; i++) {
-			boardArticles.add(new BoardArticle(i, "제목" + i, "내용" + i, currentDate, 1, 30));
+			BoardArticle articleTmp = new BoardArticle(i, "제목" + i, "내용" + i, currentDate, 1, 30);
+			fileManager.saveArticleToFile(articleTmp);
 		}
 		
 		members.add(new GeneralMember(1, "hong123", "h1234", "홍길동"));
