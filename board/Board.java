@@ -26,6 +26,7 @@ public class Board {
 
 	public Board() {
 		makeTestData();
+		boardArticles = fileManager.getAllArticles();
 		pagination = new Pagination(boardArticles.size());
 	}
 
@@ -202,7 +203,7 @@ public class Board {
 		System.out.print("상세보기할 게시물 번호 : ");
 		int targetNo = inputIntData();
 
-		BoardArticle boardArticle = getBoardArticleByNo(targetNo);
+		BoardArticle boardArticle = fileManager.loadArticleFromFile(targetNo);
 
 		if (boardArticle == null) {
 			System.out.println("없는 게시물입니다.");
@@ -368,7 +369,7 @@ public class Board {
 		System.out.print("삭제할 게시물 번호:");
 		int targetNo = inputIntData();
 
-		BoardArticle BoardArticle = getBoardArticleByNo(targetNo);
+		BoardArticle BoardArticle = fileManager.loadArticleFromFile(targetNo);
 
 		if (BoardArticle == null) {
 			System.out.println("없는 게시물입니다.");
@@ -385,7 +386,7 @@ public class Board {
 		System.out.print("수정할 게시물 번호:");
 		int targetNo = inputIntData();
 
-		BoardArticle BoardArticle = getBoardArticleByNo(targetNo);
+		BoardArticle BoardArticle = fileManager.loadArticleFromFile(targetNo);
 
 		if (BoardArticle == null) {
 			System.out.println("없는 게시물입니다.");
@@ -491,6 +492,7 @@ public class Board {
 	}
 
 	public void list(ArrayList<BoardArticle> list) {
+		
 		for (int i = pagination.getStartIdx(); i < pagination.getEndIdx(); i++) {
 			BoardArticle BoardArticle = list.get(i);
 			BoardArticle = (BoardArticle)setNickname(BoardArticle); // 모든 게시물의 닉네임을 작성자에 맞게 세팅
