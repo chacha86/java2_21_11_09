@@ -53,4 +53,7 @@ public class Pagination {
 		return (int)Math.ceil((double)totalItemCount / itemCountPerPage);
 		
 	}
+	public void setTotalItemCount(int totalItemCount) {
+		this.totalItemCount = totalItemCount;
+	}
 }

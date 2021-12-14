@@ -7,13 +7,34 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collections;
 
 import board.BoardArticle;
 
 public class FileManager {
+	String articlePath = "c:/test/article/";
+	String filePrefix = "article_";
+	String fileSuffix = ".txt";
 
-	public BoardArticle loadArticleFromFile(String file) {
-		String path = "c:/test/article/" + file;
+	public void deleteArticleFile(int id) {
+		String filename = getFilename(id);
+		String filepath = getFilepath(filename);
+		File file = new File(filepath);
+		if(!file.exists()) {
+			System.out.println("파일이 존재하지 않습니다.");
+			return;
+		}
+		file.delete();
+	}
+
+	public String getFilename(int id) {
+		return filePrefix + id + fileSuffix;
+	}
+	public String getFilepath(String filename) {
+		return articlePath + filename;
+	}
+	public BoardArticle loadArticleFromFile(String filename) {
+		String path = getFilepath(filename);
 		BoardArticle article = null;
 
 		try {
@@ -43,15 +64,16 @@ public class FileManager {
 	}
 
 	public BoardArticle loadArticleFromFile(int id) {
-		String file = "article_" + id + ".txt";
-		BoardArticle article = loadArticleFromFile(file);
-		
+		String filename = getFilename(id);
+		BoardArticle article = loadArticleFromFile(filename);
+
 		return article;
 	}
 
 	public void saveArticleToFile(BoardArticle article) {
 		try {
-			FileWriter writer = new FileWriter("c:/test/article/article_" + article.id + ".txt");
+			String filepath = getFilepath(getFilename(article.id));
+			FileWriter writer = new FileWriter(filepath);
 			// 게시물 저장
 			// 번호
 			writer.write("id:" + article.id + ",");
@@ -102,7 +124,7 @@ public class FileManager {
 
 	public ArrayList<BoardArticle> getAllArticles() {
 		ArrayList<BoardArticle> articles = new ArrayList<>();
-		File articleFolder = new File("c:/test/article");
+		File articleFolder = new File(articlePath);
 		String[] articleFilenames = articleFolder.list();
 		
 		for(int i = 0; i < articleFilenames.length; i++) {
@@ -110,7 +132,7 @@ public class FileManager {
 			BoardArticle article = loadArticleFromFile(filename);
 			articles.add(article);
 		}
-		
+		Collections.sort(articles, new ArticleComparator(1,1));
 		return articles;
 	}
 

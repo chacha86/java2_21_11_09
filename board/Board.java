@@ -5,6 +5,7 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.Scanner;
 
+import board.util.ArticleComparator;
 import board.util.FileManager;
 import board.util.MyUtil;
 
@@ -47,7 +48,7 @@ public class Board {
 					addBoardArticle();
 				}
 			} else if (cmd.equals("list")) {
-				list(boardArticles);
+				list();
 			} else if (cmd.equals("update")) {
 				updateBoardArticle();
 			} else if (cmd.equals("delete")) {
@@ -68,6 +69,11 @@ public class Board {
 				sort();
 			} else if(cmd.equals("page")) {
 				page();
+			} else if(cmd.equals("exit")) {
+				System.out.println("게시판 프로그램을 종료합니다.");
+				break;
+			} else {
+				System.out.println("알 수 없는 명령어입니다.");
 			}
 		}
 	}
@@ -111,7 +117,7 @@ public class Board {
 			} else {
 				System.out.println("알 수 없는 명령입니다. 다시 입력해주세요.");
 			}
-			list(boardArticles);
+			list();
 		}
 	}
 
@@ -120,9 +126,14 @@ public class Board {
 		int target = inputIntData();
 		System.out.println("정렬 방법을 선택해주세요. (1. 오름차순,  2. 내림차순) :");
 		int type = inputIntData();
-		
-		Collections.sort(boardArticles, new ArticleComparator(type, target));
-		list(boardArticles);
+
+		ArrayList<BoardArticle> sortedArticles = getSortedArticles(boardArticles, target, type);
+		printArticleList(sortedArticles);
+	}
+
+	private ArrayList<BoardArticle> getSortedArticles(ArrayList<BoardArticle> articles, int target, int type) {
+		Collections.sort(articles, new ArticleComparator(type, target));
+		return articles;
 	}
 
 	private boolean isLoginCheck() {
@@ -361,7 +372,7 @@ public class Board {
 			}
 		}
 
-		list(searchedboardArticles);
+		printArticleList(searchedboardArticles);
 
 	}
 
@@ -374,10 +385,9 @@ public class Board {
 		if (BoardArticle == null) {
 			System.out.println("없는 게시물입니다.");
 		} else {
-			boardArticles.remove(BoardArticle);
+			fileManager.deleteArticleFile(targetNo);
 			System.out.println("삭제가 완료되었습니다.");
-
-			list(boardArticles);
+			list();
 		}
 
 	}
@@ -386,9 +396,9 @@ public class Board {
 		System.out.print("수정할 게시물 번호:");
 		int targetNo = inputIntData();
 
-		BoardArticle BoardArticle = fileManager.loadArticleFromFile(targetNo);
+		BoardArticle boardArticle = fileManager.loadArticleFromFile(targetNo);
 
-		if (BoardArticle == null) {
+		if (boardArticle == null) {
 			System.out.println("없는 게시물입니다.");
 		} else {
 			System.out.print("새제목 : ");
@@ -396,11 +406,12 @@ public class Board {
 			System.out.print("새내용 : ");
 			String body = sc.nextLine();
 
-			BoardArticle.title = title;
-			BoardArticle.body = body;
+			boardArticle.title = title;
+			boardArticle.body = body;
 
+			fileManager.saveArticleToFile(boardArticle);
 			System.out.println("수정이 완료되었습니다.");
-			list(boardArticles);
+			list();
 		}
 
 	}
@@ -491,8 +502,12 @@ public class Board {
 		return targetMember;
 	}
 
-	public void list(ArrayList<BoardArticle> list) {
-		
+	public void list() {
+		ArrayList<BoardArticle> articles = fileManager.getAllArticles();
+		pagination.setTotalItemCount(articles.size());
+		printArticleList(articles);
+	}
+	private void printArticleList(ArrayList<BoardArticle> list) {
 		for (int i = pagination.getStartIdx(); i < pagination.getEndIdx(); i++) {
 			BoardArticle BoardArticle = list.get(i);
 			BoardArticle = (BoardArticle)setNickname(BoardArticle); // 모든 게시물의 닉네임을 작성자에 맞게 세팅
@@ -504,14 +519,11 @@ public class Board {
 			System.out.println("조회수 : " + BoardArticle.hit);
 			System.out.println("=========================");
 		}
-		
-		System.out.println("s : " + pagination.getStartPageNoInBlock());
-		System.out.println("e : " + pagination.getEndPageNoInBlock());
-		
+
 		// 페이지 숫자
-		for(int i = pagination.getStartPageNoInBlock(); i <= pagination.getEndPageNoInBlock(); i++) {	
+		for(int i = pagination.getStartPageNoInBlock(); i <= pagination.getEndPageNoInBlock(); i++) {
 			if(i == pagination.currentPageNo) {
-				System.out.print("["+i + "] ");				
+				System.out.print("["+i + "] ");
 			} else {
 				System.out.print(i + " ");
 			}
@@ -520,46 +532,6 @@ public class Board {
 	}
 }
 
-class ArticleComparator implements Comparator<BoardArticle> {
-	int type;// 1. 오름차순, 2. 내림차순
-	int target; // 1. 번호, 2. 조회수
-	
-	ArticleComparator(int type, int target) {
-		this.type = type;
-		this.target = target;
-	}
-	
-	@Override
-	public int compare(BoardArticle o1, BoardArticle o2) {
-		
-		int result = getCompareResult(o1, o2);
-		
-		if(type == 2) {
-			result *= -1;
-		}
-		
-		return result;
-		
-	}
-
-	private int getCompareResult(BoardArticle o1, BoardArticle o2) {
-		
-		if(target == 1) { // 번호
-			if(o1.id > o2.id) {
-				return 1;
-			}
-			
-			return -1;
-		} else { // 조회수
-			if(o1.hit > o2.hit) {
-				return 1;
-			}
-			
-			return -1;
-		}
-	}
-	
-}
 
 
 
